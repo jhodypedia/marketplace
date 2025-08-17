@@ -1,0 +1,15 @@
+<h1 class="h4 mb-3">Produk & Jasa Terbaru</h1>
+<div class="row g-3">
+  <% items.forEach(it=> { %>
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100">
+        <img src="<%= it.image_url || 'https://placehold.co/600x400?text=Roblox' %>" class="card-img-top" alt="">
+        <div class="card-body">
+          <div class="small text-muted text-uppercase"><%= it.category_name || '-' %></div>
+          <h3 class="h6"><a href="/items/<%= it.slug %>"><%= it.title %></a></h3>
+          <div class="fw-semibold"><%= Number(it.price).toLocaleString('id-ID') %> IDR</div>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>
