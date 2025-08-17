@@ -24,8 +24,8 @@
   <script>
     // global flash -> toastr
     (function(){
-      const success = <%- JSON.stringify(res.locals.flash.success || []) %>;
-      const error = <%- JSON.stringify(res.locals.flash.error || []) %>;
+      const success = <%- JSON.stringify(flash?.success || []) %>;
+const error = <%- JSON.stringify(flash?.error || []) %>;
       success.forEach(m => toastr.success(m));
       error.forEach(m => toastr.error(m));
     })();
