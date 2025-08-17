@@ -1,0 +1,50 @@
+<h1 class="h5 mb-3">Items</h1>
+<form method="post" action="/admin/items" class="row g-2 mb-3">
+  <div class="col-md-3">
+    <select class="form-select" name="category_id">
+      <option value="">(tanpa kategori)</option>
+      <% categories.forEach(c=> { %>
+        <option value="<%= c.id %>"><%= c.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-md-3"><input class="form-control" name="title" placeholder="Judul" required></div>
+  <div class="col-md-2">
+    <select class="form-select" name="type">
+      <option value="service">service</option><option value="tshirt">tshirt</option><option value="shirt">shirt</option><option value="pants">pants</option><option value="ugc">ugc</option><option value="gamepass">gamepass</option><option value="devproduct">devproduct</option>
+    </select>
+  </div>
+  <div class="col-md-2"><input class="form-control" name="price" type="number" min="0" placeholder="Harga" required></div>
+  <div class="col-md-2"><input class="form-control" name="stock" type="number" min="0" placeholder="Stok" required></div>
+  <div class="col-md-6"><input class="form-control" name="image_url" placeholder="Gambar URL"></div>
+  <div class="col-md-6"><input class="form-control" name="description" placeholder="Deskripsi"></div>
+  <div class="col-md-3">
+    <select class="form-select" name="published">
+      <option value="1">Published</option>
+      <option value="0">Draft</option>
+    </select>
+  </div>
+  <div class="col-md-3"><button class="btn btn-primary w-100">Tambah</button></div>
+</form>
+
+<table class="table table-sm align-middle">
+  <thead><tr><th>ID</th><th>Judul</th><th>Kategori</th><th>Tipe</th><th>Harga</th><th>Stock</th><th>Publish</th><th></th></tr></thead>
+  <tbody>
+    <% items.forEach(it=> { %>
+      <tr>
+        <td><%= it.id %></td>
+        <td><%= it.title %></td>
+        <td><%= it.category_name || '-' %></td>
+        <td><%= it.type %></td>
+        <td><%= Number(it.price).toLocaleString('id-ID') %></td>
+        <td><%= it.stock %></td>
+        <td><%= it.published ? 'Ya':'Tidak' %></td>
+        <td>
+          <form method="post" action="/admin/items/<%= it.id %>/delete">
+            <button class="btn btn-sm btn-outline-danger">Hapus</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
