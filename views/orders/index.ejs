@@ -1,0 +1,32 @@
+<h1 class="h4">Order #<%= order.id %></h1>
+<p>Status: <span class="badge bg-secondary"><%= order.status %></span></p>
+<p>Total: <strong><%= Number(order.grand_total).toLocaleString('id-ID') %> IDR</strong></p>
+
+<h2 class="h6 mt-4">Scan QRIS untuk bayar</h2>
+<% if (qrImg) { %>
+  <img src="<%= qrImg %>" alt="QRIS" class="border rounded" style="max-width:300px" />
+<% } else if (order.qris_payload) { %>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=<%= encodeURIComponent(order.qris_payload) %>" alt="QRIS" class="border rounded" />
+<% } else { %>
+  <div class="alert alert-warning">QR belum tersedia.</div>
+<% } %>
+
+<details class="mt-3">
+  <summary>Lihat raw payload</summary>
+  <pre style="white-space: pre-wrap;"><%= order.qris_payload %></pre>
+</details>
+
+<h3 class="h6 mt-4">Rincian Item</h3>
+<table class="table">
+  <thead><tr><th>Item</th><th class="text-end">Harga</th><th class="text-center">Qty</th><th class="text-end">Subtotal</th></tr></thead>
+  <tbody>
+    <% items.forEach(it=> { %>
+      <tr>
+        <td><%= it.title_snapshot %></td>
+        <td class="text-end"><%= Number(it.price).toLocaleString('id-ID') %></td>
+        <td class="text-center"><%= it.quantity %></td>
+        <td class="text-end"><%= Number(it.subtotal).toLocaleString('id-ID') %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
