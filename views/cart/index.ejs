@@ -1,0 +1,28 @@
+<h1 class="h4 mb-3">Keranjang</h1>
+<% if (!cart.length) { %>
+  <div class="alert alert-info">Keranjang kosong.</div>
+<% } else { %>
+  <table class="table align-middle">
+    <thead><tr><th>Item</th><th class="text-end">Harga</th><th class="text-center">Qty</th><th class="text-end">Subtotal</th><th></th></tr></thead>
+    <tbody>
+      <% cart.forEach(it => { %>
+        <tr>
+          <td><%= it.title %></td>
+          <td class="text-end"><%= it.price.toLocaleString('id-ID') %></td>
+          <td class="text-center"><%= it.qty %></td>
+          <td class="text-end"><%= (it.price*it.qty).toLocaleString('id-ID') %></td>
+          <td>
+            <form method="post" action="/cart/remove">
+              <input type="hidden" name="item_id" value="<%= it.item_id %>">
+              <button class="btn btn-sm btn-outline-danger">Hapus</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <div class="text-end">
+    <div class="h6">Subtotal: <%= subtotal.toLocaleString('id-ID') %> IDR</div>
+    <a class="btn btn-primary mt-2" href="/checkout">Lanjut Checkout</a>
+  </div>
+<% } %>
