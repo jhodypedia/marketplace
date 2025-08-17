@@ -1,0 +1,52 @@
+<h1 class="h5 mb-3">Orders</h1>
+<table class="table table-sm align-middle">
+  <thead><tr><th>ID</th><th>User</th><th>Total</th><th>Fee</th><th>Grand</th><th>Status</th><th>Dibuat</th><th>Aksi</th></tr></thead>
+  <tbody>
+    <% orders.forEach(o=> { %>
+      <tr>
+        <td><%= o.id %></td>
+        <td><%= o.user_id %></td>
+        <td><%= Number(o.total_amount).toLocaleString('id-ID') %></td>
+        <td><%= Number(o.fee_amount).toLocaleString('id-ID') %></td>
+        <td><%= Number(o.grand_total).toLocaleString('id-ID') %></td>
+        <td><span class="badge bg-secondary"><%= o.status %></span></td>
+        <td><%= o.created_at.toISOString ? o.created_at.toISOString().slice(0,19).replace('T',' ') : o.created_at %></td>
+        <td>
+          <form class="order-status-form d-inline-block" data-id="<%= o.id %>">
+            <select class="form-select form-select-sm d-inline w-auto" name="status">
+              <option value="pending" <%= o.status==='pending'?'selected':'' %>>pending</option>
+              <option value="paid" <%= o.status==='paid'?'selected':'' %>>paid</option>
+              <option value="processing" <%= o.status==='processing'?'selected':'' %>>processing</option>
+              <option value="delivered" <%= o.status==='delivered'?'selected':'' %>>delivered</option>
+              <option value="canceled" <%= o.status==='canceled'?'selected':'' %>>canceled</option>
+            </select>
+            <button class="btn btn-sm btn-outline-primary ms-1">Ubah</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<script>
+document.querySelectorAll('.order-status-form').forEach(form=>{
+  form.addEventListener('submit', async (ev)=>{
+    ev.preventDefault();
+    const id = form.dataset.id;
+    const status = form.querySelector('select[name="status"]').value;
+    try {
+      const res = await fetch(`/admin/orders/${id}/status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      if(!res.ok) throw new Error('Gagal');
+      toastr.success('Status diperbarui');
+      // optional: reload table
+      setTimeout(()=> location.reload(), 600);
+    } catch (e) {
+      toastr.error('Gagal update status');
+    }
+  });
+});
+</script>
