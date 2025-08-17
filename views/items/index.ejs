@@ -1,0 +1,33 @@
+<h1 class="h4 mb-3">Katalog</h1>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-md-4"><input class="form-control" name="q" placeholder="Cari..." value="<%= q || '' %>"></div>
+  <div class="col-md-4">
+    <select class="form-select" name="cat">
+      <option value="">Semua Kategori</option>
+      <% categories.forEach(c=> { %>
+        <option value="<%= c.slug %>" <%= (cat===c.slug?'selected':'') %>><%= c.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-md-2"><button class="btn btn-primary w-100">Terapkan</button></div>
+</form>
+
+<div class="row g-3">
+  <% items.forEach(it=> { %>
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100">
+        <img src="<%= it.image_url || 'https://placehold.co/600x400?text=Roblox' %>" class="card-img-top" alt="">
+        <div class="card-body">
+          <div class="small text-muted text-uppercase"><%= it.category_name || '-' %></div>
+          <h3 class="h6"><a href="/items/<%= it.slug %>"><%= it.title %></a></h3>
+          <div class="fw-semibold"><%= Number(it.price).toLocaleString('id-ID') %> IDR</div>
+          <form class="mt-2" method="post" action="/cart/add">
+            <input type="hidden" name="item_id" value="<%= it.id %>">
+            <input type="hidden" name="qty" value="1">
+            <button class="btn btn-sm btn-outline-primary">Tambah ke Keranjang</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>
