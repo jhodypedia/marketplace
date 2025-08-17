@@ -1,0 +1,16 @@
+<div class="row g-4">
+  <div class="col-md-6">
+    <img class="w-100 rounded border" src="<%= item.image_url || 'https://placehold.co/800x600?text=Roblox' %>" alt="">
+  </div>
+  <div class="col-md-6">
+    <div class="small text-uppercase text-muted"><%= item.category_name || '-' %></div>
+    <h1 class="h4"><%= item.title %></h1>
+    <div class="h5 mb-3"><%= Number(item.price).toLocaleString('id-ID') %> IDR</div>
+    <p><%= item.description || '' %></p>
+    <form class="d-flex gap-2" method="post" action="/cart/add">
+      <input type="hidden" name="item_id" value="<%= item.id %>">
+      <input type="number" name="qty" class="form-control" value="1" min="1" style="max-width:120px">
+      <button class="btn btn-primary">Tambah ke Keranjang</button>
+    </form>
+  </div>
+</div>
