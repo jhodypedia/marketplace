@@ -1,0 +1,23 @@
+<h1 class="h5 mb-3">Kategori</h1>
+<form method="post" action="/admin/categories" class="row g-2 mb-3">
+  <div class="col-md-4"><input class="form-control" name="name" placeholder="Nama kategori" required></div>
+  <div class="col-md-5"><input class="form-control" name="description" placeholder="Deskripsi (opsional)"></div>
+  <div class="col-md-3"><button class="btn btn-primary w-100">Tambah</button></div>
+</form>
+<table class="table table-sm">
+  <thead><tr><th>ID</th><th>Nama</th><th>Slug</th><th></th></tr></thead>
+  <tbody>
+    <% categories.forEach(c=> { %>
+      <tr>
+        <td><%= c.id %></td>
+        <td><%= c.name %></td>
+        <td><%= c.slug %></td>
+        <td>
+          <form method="post" action="/admin/categories/<%= c.id %>/delete">
+            <button class="btn btn-sm btn-outline-danger">Hapus</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
