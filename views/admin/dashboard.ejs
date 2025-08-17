@@ -1,0 +1,58 @@
+<% include('../partials/_flash') %>
+<h1 class="h4 mb-3">Admin Dashboard</h1>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card p-3"><div class="small text-muted">Items</div><div class="h4"><%= itemCount %></div></div></div>
+  <div class="col-md-3"><div class="card p-3"><div class="small text-muted">Orders</div><div class="h4"><%= orderCount %></div></div></div>
+  <div class="col-md-3"><div class="card p-3"><div class="small text-muted">Pendapatan Kotor (6bln)</div><div class="h4" id="grossSum">—</div></div></div>
+  <div class="col-md-3"><div class="card p-3"><div class="small text-muted">Pendapatan Bersih (6bln)</div><div class="h4" id="netSum">—</div></div></div>
+</div>
+
+<div class="card p-3 mb-4">
+  <h5>Grafik Pendapatan (6 bulan)</h5>
+  <canvas id="earningsChart" height="120"></canvas>
+</div>
+
+<div class="mb-3">
+  <a class="btn btn-outline-primary" href="/admin/items">Kelola Items</a>
+  <a class="btn btn-outline-primary" href="/admin/orders">Kelola Orders</a>
+</div>
+
+<script>
+  async function loadStats(){
+    try{
+      const res = await fetch('/admin/api/stats');
+      const j = await res.json();
+      if(!j.ok) { toastr.error('Gagal mengambil statistik'); return; }
+      const data = j.data;
+      const labels = data.map(x=> x.ym);
+      const gross = data.map(x=> x.gross);
+      const net = data.map(x=> x.net);
+      const grossSum = gross.reduce((a,b)=>a+b,0);
+      const netSum = net.reduce((a,b)=>a+b,0);
+      document.getElementById('grossSum').textContent = grossSum.toLocaleString('id-ID');
+      document.getElementById('netSum').textContent = netSum.toLocaleString('id-ID');
+      const ctx = document.getElementById('earningsChart').getContext('2d');
+      if(window.earnChart) window.earnChart.destroy();
+      window.earnChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Kotor', data: gross, fill: false, borderWidth: 2, tension: 0.3 },
+            { label: 'Bersih', data: net, fill: false, borderWidth: 2, tension: 0.3 }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'top' } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }catch(e){
+      console.error(e);
+      toastr.error('Error memuat statistik');
+    }
+  }
+  document.addEventListener('DOMContentLoaded', ()=> loadStats());
+</script>
